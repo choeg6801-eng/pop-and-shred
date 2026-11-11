@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>뽁뽁 & 파쇄</title>
+<meta name="description" content="뽁뽁이를 터뜨리고 걱정을 파쇄하며 스트레스를 비우는 작은 사이트">
+<meta property="og:title" content="뽁뽁 & 파쇄">
+<meta property="og:description" content="터뜨리고, 갈아버리고, 숨 한번 고르기">
+<meta name="theme-color" content="#ece2d0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%23cfe4ee' stroke='%2326211c' stroke-width='4'/%3E%3Cellipse cx='24' cy='22' rx='8' ry='5' fill='%23fff' transform='rotate(-30 24 22)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Gowun+Batang:wght@400;700&family=Nanum+Pen+Script&family=Nanum+Gothic+Coding:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --desk:#ece2d0; --kraft:#dccaa9; --paper:#fbf8f1; --ink:#26211c; --soft:#6f655a; --faint:#a89c8b;
+    --tomato:#e5533b; --tomato-d:#b83a25; --butter:#f4d27a; --sea:#9cc7d8; --leaf:#8fb59a;
+    --bt:160,200,216; --bs:80,130,160; --sh:205,228,238;
+    --display:'Bagel Fat One',system-ui,sans-serif; --body:'Gowun Batang',serif; --hand:'Nanum Pen Script',cursive; --mono:'Nanum Gothic Coding',monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{min-height:100vh;color:var(--ink);font-family:var(--body);font-size:15px;background:var(--desk);
+    background-image:
+      repeating-linear-gradient(90deg,rgba(120,90,50,.035) 0 2px,transparent 2px 140px),
+      repeating-linear-gradient(90deg,rgba(120,90,50,.03) 0 1px,transparent 1px 37px);}
+  button{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer}
+  .page{max-width:960px;margin:0 auto;padding:30px 20px 150px}
+
+  /* ---------- 머리 ---------- */
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:22px}
+  h1{font-family:var(--display);font-weight:400;font-size:46px;line-height:1;margin:0;letter-spacing:-1px;position:relative;display:inline-block}
+  h1 .amp{color:var(--tomato);font-size:.8em;margin:0 2px}
+  h1 svg{position:absolute;left:0;bottom:-12px;width:100%;height:14px;overflow:visible}
+  .tag{font-family:var(--hand);font-size:24px;color:var(--soft);margin:18px 0 0;line-height:1}
+  .side{display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+  .stamp{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--tomato);border:2px solid var(--tomato);outline:1px solid var(--tomato);outline-offset:2px;
+    padding:4px 9px;border-radius:4px;transform:rotate(4deg);opacity:.85;letter-spacing:.5px}
+  .switch{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--soft)}
+  .switch .track{width:38px;height:22px;border-radius:11px;border:2px solid var(--ink);background:var(--paper);position:relative;transition:background .2s}
+  .switch .track::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--ink);transition:transform .2s}
+  .switch.on .track{background:var(--butter)}
+  .switch.on .track::after{transform:translateX(16px)}
+
+  /* ---------- 폴더 탭 ---------- */
+  .tabs{display:flex;gap:4px;padding-left:14px;position:relative;z-index:2}
+  .tabs button{font-family:var(--display);font-size:15px;padding:10px 18px 8px;border:2px solid var(--ink);border-bottom:none;border-radius:12px 12px 0 0;
+    background:var(--kraft);color:var(--soft);margin-bottom:-2px;transition:padding .15s,background .15s}
+  .tabs button span{font-family:var(--mono);font-size:11px;margin-right:6px;opacity:.7}
+  .tabs button:hover{background:#e6d7bb}
+  .tabs button.on{background:var(--paper);color:var(--ink);padding-bottom:12px;margin-top:-4px}
+  .folder{background:var(--paper);border:2px solid var(--ink);border-radius:4px 18px 18px 18px;padding:28px;position:relative;
+    box-shadow:5px 6px 0 rgba(38,33,28,.13)}
+  section{display:none}
+  section.on{display:block;animation:in .35s ease-out}
+  @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .sechead{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+  h2{font-family:var(--display);font-weight:400;font-size:28px;margin:0;line-height:1.1}
+  .say{font-family:var(--hand);font-size:22px;color:var(--soft);margin:6px 0 0;line-height:1}
+  .tally{font-family:var(--mono);font-size:13px;color:var(--soft);display:flex;gap:14px}
+  .tally b{color:var(--ink);font-size:16px}
+
+  .btn{font-family:var(--display);font-size:16px;padding:11px 20px 10px;border:2px solid var(--ink);border-radius:12px;background:var(--paper);
+    box-shadow:3px 3px 0 var(--ink);transition:transform .07s,box-shadow .07s}
+  .btn:hover{background:#fff}
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+  .btn.red{background:var(--tomato);color:#fff}
+  .btn.red:hover{background:#ec634b}
+  .btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:3px 3px 0 var(--ink)}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .between{justify-content:space-between}
+
+  /* ---------- 1. 뽁뽁이 ---------- */
+  .board{position:relative;padding:18px 6px 8px}
+  .tape{position:absolute;width:92px;height:26px;background:rgba(244,210,122,.78);z-index:4;
+    -webkit-mask:linear-gradient(90deg,transparent 0 2px,#000 2px calc(100% - 2px),transparent calc(100% - 2px));
+    clip-path:polygon(0 8%,4% 0,8% 10%,12% 0,100% 0,96% 12%,100% 25%,96% 40%,100% 55%,96% 70%,100% 85%,96% 100%,0 100%,4% 85%,0 70%,4% 55%,0 40%,4% 25%)}
+  .tape.l{left:18px;top:2px;transform:rotate(-6deg)}
+  .tape.r{right:22px;top:4px;transform:rotate(5deg)}
+  /* 에어캡: 크라프트지 위에 놓인 거의 투명한 비닐 */
+  .sheet{position:relative;padding:16px 14px 14px;border-radius:6px;
+    background:
+      repeating-linear-gradient(92deg,rgba(110,75,35,.035) 0 1px,transparent 1px 7px),
+      repeating-linear-gradient(3deg,rgba(255,255,255,.05) 0 2px,transparent 2px 11px),
+      #efe9de;
+    border:1px solid rgba(255,255,255,.7);
+    box-shadow:0 0 0 1px rgba(90,60,25,.25),3px 5px 10px -4px rgba(60,40,20,.35);
+    touch-action:none;user-select:none;-webkit-user-select:none;overflow:hidden}
+  .sheet::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:rgba(var(--bt),.34)}
+  .sheet .print{position:absolute;left:50%;top:50%;z-index:0;transform:translate(-50%,-50%) rotate(-8deg);text-align:center;pointer-events:none;
+    font-family:var(--display);font-size:70px;line-height:1;color:rgba(180,55,35,.42);border:5px solid rgba(180,55,35,.38);border-radius:10px;padding:10px 26px 8px;white-space:nowrap}
+  .sheet .print small{display:block;font-family:var(--body);font-weight:700;font-size:17px;margin-top:6px;letter-spacing:1px}
+  #rows{position:relative;z-index:2}
+  .sheet.slide{animation:unroll .45s cubic-bezier(.2,.8,.3,1)}
+  @keyframes unroll{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+  .sheet .glare{position:absolute;inset:0;pointer-events:none;z-index:3;
+    background:linear-gradient(118deg,transparent 22%,rgba(255,255,255,.14) 30%,transparent 38%,transparent 64%,rgba(255,255,255,.1) 70%,transparent 76%)}
+  .brow{display:grid;grid-template-columns:repeat(var(--cols),1fr);gap:13px;margin-bottom:3px}
+  .brow.odd{grid-template-columns:repeat(calc(var(--cols) - 1),1fr);padding:0 calc(50% / var(--cols))}
+  /* 부푼 알: 속은 거의 비치고, 가장자리만 빛이 돎 */
+  .b{aspect-ratio:1;border-radius:50%;position:relative;cursor:pointer;
+    background:radial-gradient(circle at 50% 50%,rgba(var(--bt),.16) 0 48%,rgba(var(--bt),.3) 66%,rgba(255,255,255,.5) 84%,rgba(var(--bt),.55) 100%);
+    box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.6),inset 0 -5px 7px -3px rgba(var(--bs),.4),inset 0 5px 7px -4px rgba(255,255,255,.65),1px 4px 5px -2px rgba(var(--bs),.45);
+    transition:transform .14s cubic-bezier(.3,1.6,.5,1),filter .12s}
+  .b::before{content:"";position:absolute;inset:8%;border-radius:50%;border-top:2.5px solid rgba(255,255,255,.9);border-left:1.5px solid rgba(255,255,255,.5);
+    transform:rotate(-18deg);transition:opacity .15s}
+  .b::after{content:"";position:absolute;left:25%;top:20%;width:15%;height:9%;border-radius:50%;background:rgba(255,255,255,.95);transform:rotate(-35deg);transition:transform .2s}
+  @media (hover:hover){.b:not(.p):not(.press):hover{transform:scale(1.03)}}
+  /* 누르고 있는 동안: 점점 찌그러지며 비닐이 하얗게 당겨짐 */
+  .b.press{transform:scale(1.07,.78);filter:brightness(1.12);transition:transform var(--hold,200ms) cubic-bezier(.2,.7,.4,1),filter var(--hold,200ms)}
+  .b.press::before{opacity:.45}
+  .b.press::after{transform:translate(20%,90%) rotate(-10deg) scale(1.5,.6)}
+  /* 터진 알: 납작하게 꺼지고 하얀 주름이 남음 */
+  .b.p{cursor:default;transform:scale(.97,.93);clip-path:var(--cp);
+    background:rgba(var(--bt),.22);box-shadow:inset 0 0 0 1px rgba(255,255,255,.5),inset 0 0 8px rgba(255,255,255,.35)}
+  .b.p::before,.b.p::after{display:none}
+  .b .crease{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .b.pop{animation:pop .2s ease-out}
+  @keyframes pop{0%{transform:scale(1.07,.78)}30%{transform:scale(1.12,.66)}62%{transform:scale(.93,.9)}100%{transform:scale(.97,.93)}}
+  .puff{position:absolute;border-radius:50%;border:1.5px solid rgba(255,255,255,.85);pointer-events:none;z-index:5}
+  .bbk{position:absolute;pointer-events:none;z-index:6;font-family:var(--hand);font-size:30px;color:var(--tomato);line-height:1}
+  .ruler{margin:14px 6px 0;height:26px;border:2px solid var(--ink);border-radius:4px;background:#fff6dd;position:relative;overflow:hidden}
+  .ruler::before{content:"";position:absolute;inset:0;z-index:2;
+    background:repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 10%),repeating-linear-gradient(90deg,rgba(38,33,28,.55) 0 1px,transparent 1px 2%);
+    -webkit-mask:linear-gradient(#000 0 0) top/100% 9px no-repeat;mask:linear-gradient(#000 0 0) top/100% 9px no-repeat}
+  .ruler i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--sea);transition:width .2s}
+  .ruler span{position:absolute;right:8px;bottom:2px;z-index:3;font-family:var(--mono);font-size:11px;font-weight:700}
+  .ruler em{position:absolute;left:8px;bottom:2px;z-index:3;font-family:var(--mono);font-size:11px;font-style:normal;color:var(--soft)}
+  .done{position:absolute;inset:0;z-index:7;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;
+    background:rgba(251,248,241,.88)}
+  .done.on{display:flex;animation:in .3s}
+  .done .big{font-family:var(--display);font-size:30px}
+  .done .say{margin:0}
+
+  /* ---------- 2. 파쇄기 ---------- */
+  .shred-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.12fr);gap:26px;align-items:start}
+  .memo{position:relative;background:#fff3c7;padding:22px 20px 12px;transform:rotate(-1deg);
+    box-shadow:0 1px 1px rgba(0,0,0,.08),4px 8px 14px -8px rgba(90,70,20,.45);
+    clip-path:polygon(0 0,100% 0,100% calc(100% - 22px),calc(100% - 22px) 100%,0 100%)}
+  .memo::after{content:"";position:absolute;right:0;bottom:0;width:22px;height:22px;background:linear-gradient(135deg,#e9d9a0 50%,transparent 50%)}
+  .memo .tape{left:50%;top:-10px;margin-left:-46px;transform:rotate(2deg);background:rgba(156,199,216,.7)}
+  .memo label{font-family:var(--hand);font-size:24px;color:var(--soft);line-height:1}
+  textarea{display:block;width:100%;height:150px;resize:none;border:none;background:transparent;margin-top:6px;
+    font-family:var(--hand);font-size:27px;line-height:30px;color:var(--ink);
+    background-image:repeating-linear-gradient(transparent 0 29px,rgba(190,150,70,.35) 29px 30px);background-attachment:local}
+  textarea::placeholder{color:#c2b07c}
+  textarea:focus{outline:none}
+  .count{text-align:right;font-family:var(--mono);font-size:11px;color:var(--faint)}
+  .how{font-family:var(--hand);font-size:22px;color:var(--soft);margin:22px 0 8px;line-height:1}
+  .modes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+  .mode{border:2px solid var(--ink);border-radius:12px;background:var(--paper);padding:12px 4px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;
+    font-family:var(--display);font-size:14px;color:var(--soft);transition:transform .12s,background .15s}
+  .mode svg{width:34px;height:34px;transition:transform .2s}
+  .mode:hover svg{transform:rotate(-8deg) translateY(-2px)}
+  .mode.on{background:var(--ink);color:var(--paper)}
+  .mode.on svg *{stroke:var(--paper)}
+  .mode:disabled{cursor:wait}
+  .fine{font-size:12.5px;color:var(--faint);margin:12px 0 0;line-height:1.6}
+  .kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--faint);border-bottom-width:2px;border-radius:4px;padding:0 4px}
+
+  .stage{position:relative;height:430px;border:2px solid var(--ink);border-radius:14px;overflow:hidden;background:#efe6d4;transition:background .5s}
+  .stage::before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(120,90,50,.05) 0 1px,transparent 1px 26px)}
+  .stage[data-mode="burn"]{background:#2e2a30}
+  .stage[data-mode="burn"]::before{background:none}
+  .stage[data-mode="plane"]{background:#bcdcec}
+  .stage[data-mode="plane"]::before{background:none}
+  .ground{position:absolute;left:0;right:0;bottom:0;height:40px;border-top:2px solid var(--ink);background:#e2d4bb}
+  .stage[data-mode="burn"] .ground{background:#1f1c21;border-color:#000}
+  .stage[data-mode="plane"] .ground{background:#a9cfa0}
+  .msg{position:absolute;left:50%;top:16px;transform:translateX(-50%);z-index:9;max-width:88%;text-align:center;
+    font-family:var(--hand);font-size:25px;line-height:1.1;pointer-events:none;padding:7px 16px 5px;
+    background:var(--paper);border:2px solid var(--ink);border-radius:10px;box-shadow:3px 3px 0 rgba(38,33,28,.2);
+    transition:opacity .35s,transform .35s}
+  .msg.hide{opacity:0;transform:translateX(-50%) translateY(-10px)}
+  .firecv{position:absolute;left:0;top:0;width:100%;height:100%;z-index:7;pointer-events:none}
+
+  .paper{position:absolute;left:50%;width:186px;margin-left:-93px;height:132px;overflow:hidden;padding:12px 14px;background:#fff;
+    font-family:var(--hand);font-size:23px;line-height:24px;word-break:keep-all;overflow-wrap:anywhere;border:1.5px solid var(--ink);
+    background-image:repeating-linear-gradient(#fff 0 23px,#dde7ef 23px 24px)}
+  .feed{position:absolute;left:0;right:0;top:0;height:176px;overflow:hidden;z-index:2}
+  .machine{position:absolute;left:50%;top:160px;width:262px;margin-left:-131px;height:94px;z-index:4;
+    background:var(--tomato);border:2px solid var(--ink);border-radius:16px 16px 8px 8px;box-shadow:0 6px 0 var(--tomato-d),0 6px 0 2px var(--ink)}
+  .machine .slot{position:absolute;left:28px;right:28px;top:12px;height:10px;border-radius:5px;background:var(--ink)}
+  .machine .lbl{position:absolute;left:18px;bottom:14px;color:#fff;font-family:var(--display);font-size:17px}
+  .machine .led{position:absolute;right:20px;bottom:18px;width:12px;height:12px;border-radius:50%;background:#c9f0b8;border:2px solid var(--ink)}
+  .machine .vent{position:absolute;right:44px;bottom:16px;display:flex;gap:4px}
+  .machine .vent i{width:4px;height:16px;border-radius:2px;background:var(--tomato-d)}
+  .machine.run{animation:shake .07s infinite}
+  .machine.run .led{background:var(--butter)}
+  @keyframes shake{0%{transform:translate(0,0)}33%{transform:translate(1.5px,-.5px)}66%{transform:translate(-1.5px,.5px)}}
+  .chute{position:absolute;left:0;right:0;top:256px;bottom:40px;overflow:hidden;z-index:3}
+  .strip{position:absolute;top:0;height:132px;overflow:hidden;background:#fff;border-left:1px solid var(--ink);border-right:1px solid var(--ink)}
+  .strip .inner{position:absolute;top:0;width:186px;height:132px;padding:12px 14px;font-family:var(--hand);font-size:23px;line-height:24px;word-break:keep-all;overflow-wrap:anywhere;
+    background-image:repeating-linear-gradient(#fff 0 23px,#dde7ef 23px 24px)}
+  .basket{position:absolute;left:50%;bottom:38px;width:200px;margin-left:-100px;height:64px;z-index:5;border:2px solid var(--ink);border-top:none;border-radius:0 0 12px 12px;
+    background:repeating-linear-gradient(90deg,transparent 0 12px,rgba(38,33,28,.5) 12px 14px)}
+  .basket::before{content:"";position:absolute;left:-6px;right:-6px;top:-4px;height:6px;border:2px solid var(--ink);border-radius:4px;background:var(--paper)}
+
+  .bowl{position:absolute;left:50%;bottom:38px;width:200px;margin-left:-100px;height:66px;z-index:6;border:2px solid #000;border-top:none;
+    border-radius:0 0 100px 100px / 0 0 66px 66px;background:#55504f}
+  .bowl::before{content:"";position:absolute;left:-8px;right:-8px;top:-7px;height:12px;border-radius:50%;background:#7a7473;border:2px solid #000}
+    border-radius:50% 50% 50% 50% / 64% 64% 36% 36%;
+    background:radial-gradient(ellipse at 50% 80%,#fff2b0 0 22%,#ffc23e 23% 45%,#f2662c 46% 70%,transparent 71%)}
+  .warm{position:absolute;left:50%;bottom:40px;width:340px;height:200px;margin-left:-170px;z-index:1;border-radius:50% 50% 0 0;background:rgba(242,140,60,.22);opacity:0;pointer-events:none}
+
+  .cloud{position:absolute;z-index:1}
+  .cloud svg{display:block;width:100%;height:auto;overflow:visible}
+  .plane{position:absolute;left:50%;top:146px;width:112px;margin-left:-56px;z-index:6;opacity:0}
+  .dash{position:absolute;width:10px;height:3px;border-radius:2px;background:var(--ink);z-index:5;pointer-events:none}
+
+  /* ---------- 3. 영수증 ---------- */
+  .end{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:34px;align-items:start}
+  .breathe{display:flex;flex-direction:column;align-items:center;gap:16px;padding-top:12px}
+  .orb{width:210px;height:210px;border-radius:50%;border:2px dashed var(--faint);display:grid;place-items:center}
+  .orb .core{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;background:var(--leaf);border:2px solid var(--ink);
+    font-family:var(--hand);font-size:34px;color:var(--ink);animation:breath 8s ease-in-out infinite}
+  @keyframes breath{0%,100%{transform:scale(.6)}50%{transform:scale(1)}}
+  .endtitle{font-family:var(--display);font-size:28px;margin:6px 0 0;text-align:center}
+  .printer{position:relative}
+  .printer .mouth{height:16px;border:2px solid var(--ink);border-radius:8px;background:var(--ink);position:relative;z-index:2;margin:0 -8px}
+  .feedbox{overflow:hidden;margin-top:-8px;padding:0 4px 12px}
+  .receipt{background:#fff;padding:26px 22px 30px;font-family:var(--mono);font-size:13px;line-height:1.75;color:#2d2924;position:relative;
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
+    -webkit-mask:conic-gradient(from 135deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/12px 7px repeat-x,linear-gradient(#000 0 0) top/100% calc(100% - 7px) no-repeat;
+    mask:conic-gradient(from 135deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/12px 7px repeat-x,linear-gradient(#000 0 0) top/100% calc(100% - 7px) no-repeat}
+  .receipt .c{text-align:center}
+  .receipt .shop{font-family:var(--display);font-size:22px;letter-spacing:0;line-height:1.2}
+  .receipt hr{border:none;border-top:1.5px dashed #9a8f81;margin:10px 0}
+  .receipt .li{display:flex;justify-content:space-between;gap:10px}
+  .receipt .li b{font-weight:700}
+  .receipt .sum{font-weight:700;font-size:14px}
+  .receipt .note{font-family:var(--hand);font-size:25px;line-height:1.15;text-align:center;margin:6px 0;color:var(--ink)}
+  .receipt .bars{height:38px;margin:14px auto 4px;width:80%}
+  .receipt .tiny{font-size:11px;color:#8d8275;text-align:center}
+  .endbtns{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+
+
+  .streak{font-family:var(--hand);font-size:22px;line-height:1;color:var(--ink);background:var(--butter);padding:5px 10px 3px;border-radius:4px;transform:rotate(-2deg);display:none}
+  .streak.on{display:block}
+  .theme{margin:10px 0 0;font-size:13px;color:var(--soft);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .theme i{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--ink);background:rgb(var(--bt))}
+  .theme b{color:var(--ink)}
+  .theme span{color:var(--faint);font-size:12px}
+  .modal{position:fixed;inset:0;z-index:50;background:rgba(38,33,28,.55);display:none;align-items:center;justify-content:center;padding:16px}
+  .modal.on{display:flex;animation:in .25s}
+  .modal .box{background:var(--paper);border:2px solid var(--ink);border-radius:16px;padding:18px;width:100%;max-width:420px;box-shadow:5px 6px 0 rgba(0,0,0,.25);text-align:center}
+  .modal img{display:block;width:100%;max-height:62vh;object-fit:contain;border:1.5px solid var(--ink);border-radius:8px;background:var(--desk);margin:10px 0}
+  .mtitle{font-family:var(--display);font-size:22px;margin:0}
+  .mhint{font-size:12.5px;color:var(--faint);margin:0 0 12px}
+  .mhint:last-child{margin:10px 0 0}
+  .mhint:empty{display:none}
+
+  /* ---------- 뽁이 (응원 캐릭터) ---------- */
+  .buddy{position:fixed;right:22px;bottom:16px;z-index:40;width:96px;transition:transform 1s cubic-bezier(.4,0,.3,1);user-select:none;-webkit-user-select:none}
+  .buddy svg{display:block;width:100%;height:auto;overflow:visible;cursor:pointer}
+  .buddy .bob{animation:bob 2.4s ease-in-out infinite;transform-origin:50px 100px;transform-box:view-box}
+  @keyframes bob{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-5px) scale(.97,1.03)}}
+  .buddy.jump .bob{animation:jump .65s cubic-bezier(.3,1.4,.5,1)}
+  @keyframes jump{0%{transform:scale(1.12,.86)}40%{transform:translateY(-34px) scale(.92,1.08)}75%{transform:translateY(0) scale(1.1,.9)}100%{transform:none}}
+  .buddy.hop .bob{animation:hop .5s ease-out 2}
+  @keyframes hop{0%,100%{transform:none}50%{transform:translateY(-12px)}}
+  .buddy .lid{transform-origin:center;transform-box:fill-box;transform:scaleY(0);transition:transform .07s}
+  .buddy.blink .lid{transform:scaleY(1)}
+  .buddy .e,.buddy .m{display:none}
+  .buddy[data-face="normal"] .e-normal,.buddy[data-face="normal"] .m-smile{display:inline}
+  .buddy[data-face="talk"] .e-normal,.buddy[data-face="talk"] .m-open{display:inline}
+  .buddy[data-face="happy"] .e-happy,.buddy[data-face="happy"] .m-grin{display:inline}
+  .buddy[data-face="wow"] .e-wow,.buddy[data-face="wow"] .m-o{display:inline}
+  .buddy[data-face="proud"] .e-proud,.buddy[data-face="proud"] .m-smile{display:inline}
+  .buddy[data-face="proud"] .cheek,.buddy[data-face="happy"] .cheek{opacity:1}
+  .buddy{pointer-events:none}
+  .buddy svg,.buddy .bye{pointer-events:auto}
+  .buddy .arm-r{transform-origin:76px 82px;transform-box:view-box}
+  .buddy.talking .arm-r{animation:wave .32s ease-in-out infinite alternate}
+  @keyframes wave{from{transform:rotate(0)}to{transform:rotate(-38deg)}}
+  .buddy.flip svg{transform:scaleX(-1)}
+  .talk{position:absolute;right:58px;bottom:96px;width:max-content;max-width:230px;background:var(--paper);border:2px solid var(--ink);border-radius:16px 16px 4px 16px;
+    padding:9px 14px 7px;font-family:var(--hand);font-size:24px;line-height:1.1;color:var(--ink);box-shadow:3px 3px 0 rgba(38,33,28,.18);
+    transform-origin:100% 100%;transform:scale(.4);opacity:0;pointer-events:none;transition:transform .25s cubic-bezier(.3,1.5,.5,1),opacity .2s}
+  .talk.on{transform:scale(1);opacity:1}
+  .bye{position:absolute;left:-6px;top:4px;width:24px;height:24px;border-radius:50%;border:2px solid var(--ink);background:var(--paper);font-size:13px;line-height:1;
+    display:grid;place-items:center;opacity:0;transition:opacity .2s}
+  .buddy:hover .bye{opacity:1}
+  .call{position:fixed;right:16px;bottom:16px;z-index:40;font-family:var(--hand);font-size:22px;padding:6px 14px 4px;border:2px solid var(--ink);border-radius:999px;
+    background:var(--paper);box-shadow:2px 2px 0 var(--ink);display:none}
+  .call.on{display:block}
+  @media (max-width:560px){
+    .buddy{width:74px;right:10px;bottom:10px}
+    .talk{right:44px;bottom:74px;font-size:21px;max-width:190px}
+    .bye{opacity:1;width:22px;height:22px}
+    .page{padding-bottom:120px}
+  }
+  footer{text-align:center;font-family:var(--hand);font-size:20px;color:var(--faint);margin-top:26px}
+
+  @media (max-width:800px){
+    .shred-grid{grid-template-columns:1fr}
+    .end{grid-template-columns:1fr}
+    .printer{max-width:360px;margin:0 auto;width:100%}
+  }
+  @media (max-width:560px){
+    .page{padding:20px 12px 34px}
+    h1{font-size:36px}
+    .tag{font-size:21px}
+    .stamp{display:none}
+    .folder{padding:18px 14px}
+    .tabs{padding-left:8px}
+    .tabs button{font-size:13px;padding:9px 11px 7px}
+    .tabs button span{display:none}
+    .brow{gap:7px;margin-bottom:2px}
+    .sheet .print{font-size:42px;padding:8px 16px 6px}
+    .sheet .print small{font-size:12px}
+    .stage{height:410px}
+    .orb{width:170px;height:170px}
+  }
+  @media (prefers-reduced-motion:reduce){.machine.run{animation:none}.orb .core{animation-duration:12s}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <div>
+      <h1>뽁뽁<span class="amp">&</span>파쇄
+        <svg viewBox="0 0 300 14" preserveAspectRatio="none"><path d="M3 9 C 40 3, 70 13, 110 7 S 180 3, 220 8 S 280 11, 297 5" fill="none" stroke="#e5533b" stroke-width="4" stroke-linecap="round"/></svg>
+      </h1>
+      <p class="tag">터뜨리고, 갈아버리고, 숨 한번 고르기</p>
+    </div>
+    <div class="side">
+      <div class="stamp" id="stamp"></div>
+      <div class="streak" id="streak"></div>
+      <button class="switch on" id="soundBtn" aria-label="소리 켜기/끄기"><span id="soundTxt">소리</span><span class="track"></span></button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="on" data-tab="wrapSec"><span>01</span>뽁뽁이</button>
+    <button data-tab="shredSec"><span>02</span>걱정 파쇄기</button>
+    <button data-tab="endSec"><span>03</span>오늘의 영수증</button>
+  </nav>
+
+  <div class="folder">
+    <!-- 1. 뽁뽁이 -->
+    <section id="wrapSec" class="on">
+      <div class="sechead">
+        <div>
+          <h2>무한 뽁뽁이</h2>
+          <p class="say">꾹 누르거나, 누른 채로 쓱— 문질러 보세요</p>
+          <p class="theme"><i id="themeDot"></i>오늘의 뽁뽁이 · <b id="themeName"></b> <span>요일마다 색이 바뀌어요</span></p>
+        </div>
+        <div class="tally"><span>오늘 <b id="today">0</b></span><span>전체 <b id="total">0</b></span><span><b id="sheets">0</b>판째</span></div>
+      </div>
+      <div class="board">
+        <div class="tape l"></div><div class="tape r"></div>
+        <div class="sheet" id="sheet">
+          <div class="print">취급주의<small>깨지기 쉬운 마음 · 살살 다뤄 주세요</small></div>
+          <div class="glare"></div>
+          <div id="rows"></div>
+          <div class="done" id="done">
+            <div class="big">한 판 끝!</div>
+            <p class="say">속이 좀 시원해졌나요?</p>
+            <div class="row" style="justify-content:center">
+              <button class="btn" id="newSheet">새 판 깔기</button>
+              <button class="btn red" data-go="shredSec">걱정 버리러 가기</button>
+            </div>
+          </div>
+        </div>
+        <div class="ruler"><i id="rulerFill"></i><em>이번 판</em><span id="pct">0%</span></div>
+      </div>
+      <div class="row between" style="margin-top:22px">
+        <button class="btn" id="resetSheet">판 갈기</button>
+        <button class="btn red" data-go="shredSec">다음, 걱정 파쇄기 →</button>
+      </div>
+    </section>
+
+    <!-- 2. 파쇄기 -->
+    <section id="shredSec">
+      <div class="sechead">
+        <div>
+          <h2>걱정 파쇄기</h2>
+          <p class="say">머릿속에 맴도는 걸 적고, 버리는 방법을 골라요</p>
+        </div>
+        <div class="tally"><span>오늘 버린 걱정 <b id="worryCount">0</b></span></div>
+      </div>
+      <div class="shred-grid">
+        <div>
+          <div class="memo">
+            <div class="tape"></div>
+            <label for="worry">오늘 나를 괴롭힌 것</label>
+            <textarea id="worry" maxlength="80" placeholder="발표 망한 것 같다…"></textarea>
+            <div class="count"><span id="len">0</span>/80</div>
+          </div>
+          <p class="how">어떻게 버릴까?</p>
+          <div class="modes">
+            <button class="mode on" data-mode="shred">
+              <svg viewBox="0 0 40 40" fill="none" stroke="#26211c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="12" width="28" height="11" rx="3"/><path d="M12 4h16v8M12 23v12M17 23v9M22 23v12M27 23v8"/></svg>
+              파쇄하기</button>
+            <button class="mode" data-mode="burn">
+              <svg viewBox="0 0 40 40" fill="none" stroke="#26211c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 36c-7 0-11-4.6-11-10.4 0-6 5-9 6.4-15.6 3.6 2.4 4.6 6 4.4 8.6 2.2-1.4 3.4-3.8 3.4-6.4 4.4 3.4 7.8 8.2 7.8 13.4C31 31.4 27 36 20 36z"/><path d="M20 36c-3 0-4.6-2-4.6-4.4 0-2.8 2.4-4.2 3.2-7 2.8 1.8 6 4.4 6 7 0 2.4-1.6 4.4-4.6 4.4z"/></svg>
+              태우기</button>
+            <button class="mode" data-mode="plane">
+              <svg viewBox="0 0 40 40" fill="none" stroke="#26211c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19 36 6 26 34l-7-10z"/><path d="M36 6 19 24v9l4-5"/></svg>
+              날려 보내기</button>
+          </div>
+          <button class="btn red" id="throwBtn" style="width:100%" disabled>파쇄하기</button>
+          <p class="fine">적은 내용은 어디에도 저장되지 않아요. <span class="kbd">Ctrl</span> + <span class="kbd">Enter</span>로도 버릴 수 있어요.</p>
+        </div>
+        <div class="stage" id="stage" data-mode="shred">
+          <div class="ground"></div>
+          <div class="msg" id="msg">메모지에 적고 버려 보세요</div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:22px;justify-content:flex-end">
+        <button class="btn" data-go="endSec">다 버렸어요 →</button>
+      </div>
+    </section>
+
+    <!-- 3. 영수증 -->
+    <section id="endSec">
+      <div class="end">
+        <div class="breathe">
+          <div class="orb"><div class="core" id="breathTxt">들이쉬고</div></div>
+          <p class="endtitle">오늘도 수고했어요</p>
+          <p class="say" style="text-align:center;margin:0">원이 커지면 들이쉬고, 작아지면 내쉬어요</p>
+        </div>
+        <div class="printer">
+          <div class="mouth"></div>
+          <div class="feedbox"><div class="receipt" id="receipt"></div></div>
+          <div class="endbtns">
+            <button class="btn" id="reprint">한마디 다시 뽑기</button>
+            <button class="btn red" id="makeImg">영수증 이미지로 저장</button>
+            <button class="btn" data-go="wrapSec">처음으로</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>천천히, 오늘 몫만큼만.</footer>
+</div>
+
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="box">
+    <p class="mtitle">오늘의 영수증</p>
+    <img id="shot" alt="오늘의 마음 정리 영수증 이미지">
+    <p class="mhint">휴대폰에서는 이미지를 길게 눌러도 저장돼요</p>
+    <div class="row" style="justify-content:center">
+      <button class="btn red" id="saveImg">저장하기</button>
+      <button class="btn" id="shareImg">공유하기</button>
+      <button class="btn" id="closeModal">닫기</button>
+    </div>
+    <p class="mhint" id="mnote"></p>
+  </div>
+</div>
+
+<div class="buddy" id="buddy" data-face="normal">
+  <div class="talk" id="talk"></div>
+  <button class="bye" id="bye" aria-label="뽁이 숨기기">×</button>
+  <svg viewBox="0 0 100 110" id="buddySvg" aria-label="응원 캐릭터 뽁이">
+    <defs><radialGradient id="bg" cx=".5" cy=".55" r=".5"><stop offset=".6" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".45"/></radialGradient></defs>
+    <ellipse cx="50" cy="104" rx="26" ry="4.5" fill="rgba(38,33,28,.15)"/>
+    <g class="bob">
+      <!-- 발 -->
+      <ellipse cx="38" cy="96" rx="9" ry="6" fill="#fff" stroke="#26211c" stroke-width="3"/>
+      <ellipse cx="62" cy="96" rx="9" ry="6" fill="#fff" stroke="#26211c" stroke-width="3"/>
+      <!-- 몸 -->
+      <circle cx="50" cy="58" r="36" style="fill:rgb(var(--sh))" stroke="#26211c" stroke-width="3.2"/>
+      <circle cx="50" cy="58" r="36" fill="url(#bg)"/>
+      <ellipse cx="33" cy="38" rx="10" ry="6" fill="#fff" opacity=".9" transform="rotate(-32 33 38)"/>
+      <circle cx="70" cy="81" r="3" fill="#fff" opacity=".7"/>
+      <!-- 팔 (동글한 손, 몸 앞) -->
+      <ellipse cx="19" cy="76" rx="6.5" ry="8.5" transform="rotate(35 19 76)" style="fill:rgb(var(--sh))" stroke="#26211c" stroke-width="3"/>
+      <g class="arm-r"><ellipse cx="81" cy="76" rx="6.5" ry="8.5" transform="rotate(-35 81 76)" style="fill:rgb(var(--sh))" stroke="#26211c" stroke-width="3"/></g>
+      <!-- 트레이드마크: 한 번 터졌다가 붙인 반창고 -->
+      <g transform="rotate(32 70 30)">
+        <rect x="57" y="25" width="26" height="10" rx="5" fill="#f7dcb6" stroke="#26211c" stroke-width="2.4"/>
+        <rect x="66" y="25.8" width="8" height="8.4" fill="#ecc28f"/>
+        <circle cx="61.5" cy="28.5" r=".9" fill="#c99a62"/><circle cx="61.5" cy="31.5" r=".9" fill="#c99a62"/>
+        <circle cx="78.5" cy="28.5" r=".9" fill="#c99a62"/><circle cx="78.5" cy="31.5" r=".9" fill="#c99a62"/>
+      </g>
+      <!-- 볼 -->
+      <ellipse class="cheek" cx="30" cy="69" rx="6" ry="3.4" fill="#f2a0a0" opacity=".75"/>
+      <ellipse class="cheek" cx="70" cy="69" rx="6" ry="3.4" fill="#f2a0a0" opacity=".75"/>
+      <!-- 눈: 기본 -->
+      <g class="e e-normal">
+        <ellipse cx="40" cy="58" rx="4.4" ry="5.6" fill="#26211c"/>
+        <ellipse cx="60" cy="58" rx="4.4" ry="5.6" fill="#26211c"/>
+        <circle cx="41.5" cy="56" r="1.5" fill="#fff"/><circle cx="61.5" cy="56" r="1.5" fill="#fff"/>
+        <rect class="lid" x="34" y="51" width="12" height="13" rx="5" style="fill:rgb(var(--sh))"/>
+        <rect class="lid" x="54" y="51" width="12" height="13" rx="5" style="fill:rgb(var(--sh))"/>
+      </g>
+      <!-- 눈: 기쁨 ^ ^ -->
+      <g class="e e-happy" fill="none" stroke="#26211c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M35 60 L40 54 L45 60"/><path d="M55 60 L60 54 L65 60"/>
+      </g>
+      <!-- 눈: 놀람 -->
+      <g class="e e-wow">
+        <circle cx="40" cy="57" r="6" fill="#fff" stroke="#26211c" stroke-width="2.6"/><circle cx="40" cy="57.5" r="3" fill="#26211c"/>
+        <circle cx="60" cy="57" r="6" fill="#fff" stroke="#26211c" stroke-width="2.6"/><circle cx="60" cy="57.5" r="3" fill="#26211c"/>
+      </g>
+      <!-- 눈: 뿌듯 (감고 웃음) -->
+      <g class="e e-proud" fill="none" stroke="#26211c" stroke-width="3" stroke-linecap="round">
+        <path d="M35 57 Q40 62 45 57"/><path d="M55 57 Q60 62 65 57"/>
+      </g>
+      <!-- 입 -->
+      <path class="m m-smile" d="M45 67 Q50 72 55 67" fill="none" stroke="#26211c" stroke-width="2.6" stroke-linecap="round"/>
+      <path class="m m-open" d="M44.5 66 Q50 66 55.5 66 Q55 75 50 75 Q45 75 44.5 66Z" fill="#c9503c" stroke="#26211c" stroke-width="2.4" stroke-linejoin="round"/>
+      <path class="m m-grin" d="M42 65.5 Q50 66.5 58 65.5 Q57 77 50 77 Q43 77 42 65.5Z" fill="#c9503c" stroke="#26211c" stroke-width="2.4" stroke-linejoin="round"/>
+      <ellipse class="m m-o" cx="50" cy="70" rx="3.6" ry="4.4" fill="#c9503c" stroke="#26211c" stroke-width="2.4"/>
+    </g>
+  </svg>
+</div>
+<button class="call" id="callBuddy">뽁이 부르기</button>
+
+<script>
+(() => {
+  /* ---------- 저장 (실패해도 동작) ---------- */
+  const store = {
+    get(k, d){ try{ const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } },
+    set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+  };
+  const now = new Date();
+  const todayKey = now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate(); // 기기 시간 기준
+  const DAYS = ['일','월','화','수','목','금','토'];
+  const pad = n => String(n).padStart(2,'0');
+  let total = store.get('pp_total', 0);
+  let sheets = store.get('pp_sheets', 0);
+  let daily = store.get('pp_daily2', null);
+  if (!daily || daily.d !== todayKey) daily = {d:todayKey, pop:0, shred:0, burn:0, plane:0};
+  const saveDaily = () => store.set('pp_daily2', daily);
+  let soundOn = store.get('pp_sound', true);
+  const rnd = (a,b) => a + Math.random()*(b-a);
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const anim = (el, frames, o) => el.animate(frames, Object.assign({fill:'forwards', easing:'ease-in-out'}, o)).finished;
+  const $ = id => document.getElementById(id);
+
+  $('stamp').textContent = `${now.getFullYear()}.${pad(now.getMonth()+1)}.${pad(now.getDate())} ${DAYS[now.getDay()]}`;
+
+  /* ---------- 요일별 뽁뽁이 색 ---------- */
+  const THEMES = [ // [이름, 뽁뽁이 색, 그림자 색, 시트 색] — 일~토
+    ['맑은 투명','175,195,205','90,110,125','222,229,233'],
+    ['하늘색','160,200,216','80,130,160','205,228,238'],
+    ['민트','150,210,190','70,140,120','205,236,226'],
+    ['라벤더','190,175,225','110,90,160','226,219,243'],
+    ['복숭아','240,185,160','170,100,80','248,226,215'],
+    ['레몬','235,212,120','160,135,50','247,238,200'],
+    ['벚꽃','240,175,195','170,90,115','248,223,231']
+  ];
+  const theme = THEMES[now.getDay()];
+  document.documentElement.style.setProperty('--bt', theme[1]);
+  document.documentElement.style.setProperty('--bs', theme[2]);
+  document.documentElement.style.setProperty('--sh', theme[3]);
+  $('themeName').textContent = theme[0];
+
+  /* ---------- 연속 방문 ---------- */
+  const dayNum = d => Math.floor(new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime() / 86400000);
+  let visit = store.get('pp_visit', {last:null, streak:0, days:0});
+  const td = dayNum(now);
+  if (visit.last !== td){
+    visit.streak = (visit.last === td - 1) ? visit.streak + 1 : 1;
+    visit.days = (visit.days || 0) + 1; visit.last = td; store.set('pp_visit', visit);
+  }
+  if (visit.streak >= 2){ $('streak').textContent = `연속 ${visit.streak}일째 방문`; $('streak').classList.add('on'); }
+  else if (visit.days >= 2){ $('streak').textContent = `${visit.days}번째 방문`; $('streak').classList.add('on'); }
+
+  /* ---------- 뽁이: 움직이며 응원하는 캐릭터 ---------- */
+  const LINES = {
+    general:['오늘도 여기까지 온 거 대단해','숨 한번 크게 쉬어 볼까?','넌 생각보다 잘하고 있어','천천히 해도 괜찮아','물 한 잔 마셨어?','힘들면 쉬어 가도 돼','오늘 하루도 버텼다! 짝짝','내가 옆에서 응원할게','어깨 한번 쭉 펴 보자','나도 한 번 터졌었는데 붙이니까 괜찮아!'],
+    pop:['뽁뽁 소리 좋다~','오, 손 빠르다!','계속 터뜨려! 시원하지?','그 기세야!','스트레스도 같이 터지는 중'],
+    done:['한 판 다 터뜨렸다! 최고야','와, 진짜 다 했어?! 멋지다'],
+    shred:['갈아버렸다! 이제 없어','잘게잘게~ 안녕!'],
+    burn:['활활~ 다 타버렸어','재가 돼서 날아갔다!'],
+    plane:['멀리멀리 날아가라~','저 걱정은 이제 안 보여!'],
+    end:['오늘 진짜 수고했어','푹 쉬어. 내일 또 와!'],
+    idle:['나 여기 있어~','뽁뽁이 하나만 더 터뜨려 볼래?']
+  };
+  const buddy = (() => {
+    const box = $('buddy'), talk = $('talk'), call = $('callBuddy');
+    let hidden = store.get('pp_buddy_hidden', false), tTalk = null, lastPopLine = 0, idleT = null, pos = 0;
+    const apply = () => { box.style.display = hidden ? 'none' : ''; call.classList.toggle('on', hidden); };
+    // 표정: normal(기본) · talk(말하기) · happy(기쁨 ^^) · wow(놀람) · proud(뿌듯)
+    function say(text, ms = 3600, face = 'talk'){
+      if (hidden) return;
+      clearTimeout(tTalk); talk.textContent = text; talk.classList.add('on'); box.classList.add('talking'); box.dataset.face = face;
+      if (face !== 'talk') setTimeout(() => { if (box.classList.contains('talking') && box.dataset.face === face) box.dataset.face = 'talk'; }, 1300);
+      tTalk = setTimeout(() => { talk.classList.remove('on'); box.classList.remove('talking'); box.dataset.face = 'normal'; }, ms);
+    }
+    function jump(){ box.classList.remove('jump'); void box.offsetWidth; box.classList.add('jump'); setTimeout(() => box.classList.remove('jump'), 700); }
+    function line(kind, opt = {}){
+      if (kind === 'pop'){ const t = Date.now(); if (t - lastPopLine < 9000) return; lastPopLine = t; }
+      const FACE = {done:'wow', shred:'happy', burn:'happy', plane:'happy', end:'proud', pop:'happy', idle:'talk', general:pick(['happy','proud','talk'])};
+      say(pick(LINES[kind]), 3600, FACE[kind] || 'talk'); if (opt.jump) jump();
+      poke();
+    }
+    // 눈 깜빡임
+    (function blink(){ setTimeout(() => { if (!/normal|talk/.test(box.dataset.face)) return blink(); box.classList.add('blink'); setTimeout(() => box.classList.remove('blink'), 130); blink(); }, rnd(2200, 5200)); })();
+    // 가끔 옆으로 콩콩 걸어다님
+    setInterval(() => {
+      if (hidden || box.classList.contains('talking')) return;
+      const max = innerWidth < 560 ? 60 : 160;
+      const next = -Math.round(rnd(0, max));
+      box.classList.toggle('flip', next > pos ? false : true);
+      pos = next; box.style.transform = `translateX(${pos}px)`;
+      box.classList.add('hop'); setTimeout(() => box.classList.remove('hop'), 1000);
+    }, 11000);
+    // 한동안 아무것도 안 하면 말 걸기
+    function poke(){ clearTimeout(idleT); idleT = setTimeout(() => line('idle'), 40000); }
+    $('buddySvg').addEventListener('click', () => { ac(); squeak(); line('general', {jump:true}); });
+    $('bye').onclick = () => { hidden = true; store.set('pp_buddy_hidden', true); apply(); };
+    call.onclick = () => { hidden = false; store.set('pp_buddy_hidden', false); apply(); jump(); say('다시 왔어! 같이 하자', 3200, 'wow'); };
+    apply();
+    setTimeout(() => {
+      say(visit.streak >= 2 ? `연속 ${visit.streak}일째! 또 와줘서 좋아` : '안녕! 나는 뽁이야. 같이 스트레스 날려 보자', 4200, 'happy');
+      jump(); poke();
+    }, 700);
+    return {line};
+  })();
+
+  /* ---------- 소리 ---------- */
+  let ctx = null, out = null;
+  function ac(){
+    if (!soundOn) return null;
+    try{
+      if (!ctx){
+        ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4;
+        out = ctx.createGain(); out.gain.value = .8; out.connect(comp).connect(ctx.destination);
+      }
+      if (ctx.state === 'suspended') ctx.resume();
+      return ctx;
+    }catch(e){ return null; }
+  }
+  const cache = {};
+  function noise(c, sec){
+    const k = sec.toFixed(3); if (cache[k]) return cache[k];
+    const b = c.createBuffer(1, Math.max(1, Math.floor(c.sampleRate*sec)), c.sampleRate), d = b.getChannelData(0);
+    for (let i=0;i<d.length;i++) d[i] = Math.random()*2-1;
+    return cache[k] = b;
+  }
+  function burst(c, t, sec, type, freq, q, vol, decay){
+    const s = c.createBufferSource(); s.buffer = noise(c, sec);
+    const f = c.createBiquadFilter(); f.type = type; f.frequency.value = freq; if (q) f.Q.value = q;
+    const g = c.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0008, t+decay);
+    s.connect(f).connect(g).connect(out); s.start(t); s.stop(t+sec);
+  }
+  // 에어캡 '뽁': 날카로운 터짐 + 짧은 공기 울림 + 아래로 떨어지는 작은 톤
+  function popSound(){
+    const c = ac(); if(!c) return; const t = c.currentTime + .002;
+    burst(c, t, .02, 'highpass', rnd(2200,3600), 0, rnd(.9,1.2), .014);
+    burst(c, t, .09, 'bandpass', rnd(340,720), rnd(3,6), rnd(1.3,1.8), rnd(.04,.07));
+    const o = c.createOscillator(); o.type = 'triangle';
+    o.frequency.setValueAtTime(rnd(700,1100), t); o.frequency.exponentialRampToValueAtTime(rnd(160,240), t+.035);
+    const g = c.createGain(); g.gain.setValueAtTime(.32, t); g.gain.exponentialRampToValueAtTime(.0008, t+.045);
+    o.connect(g).connect(out); o.start(t); o.stop(t+.05);
+  }
+  function squeak(){ // 누를 때 비닐이 눌리는 아주 작은 소리
+    const c = ac(); if(!c) return; burst(c, c.currentTime, .04, 'bandpass', rnd(1500,2400), 2, .12, .035);
+  }
+  function bed(sec, type, f0, vol, f1){
+    const c = ac(); if(!c) return null; const t = c.currentTime;
+    const s = c.createBufferSource(); s.buffer = noise(c, sec);
+    const f = c.createBiquadFilter(); f.type = type; f.frequency.setValueAtTime(f0,t); if (f1) f.frequency.exponentialRampToValueAtTime(f1,t+sec);
+    const g = c.createGain(); g.gain.setValueAtTime(.001,t); g.gain.linearRampToValueAtTime(vol,t+.1); g.gain.setValueAtTime(vol,t+sec-.3); g.gain.linearRampToValueAtTime(.001,t+sec);
+    s.connect(f).connect(g).connect(out); s.start(t);
+    return {c,t};
+  }
+  function motor(sec, base, vol){
+    const r = bed(sec,'lowpass',650,vol); if(!r) return;
+    const o = r.c.createOscillator(); o.type='sawtooth'; o.frequency.value = base;
+    const l = r.c.createOscillator(); l.frequency.value = 18; const lg = r.c.createGain(); lg.gain.value = 8; l.connect(lg).connect(o.frequency);
+    const g = r.c.createGain(); g.gain.setValueAtTime(.06,r.t); g.gain.linearRampToValueAtTime(.001,r.t+sec);
+    o.connect(g).connect(out); o.start(r.t); l.start(r.t); o.stop(r.t+sec); l.stop(r.t+sec);
+  }
+  function crackle(){ const c = ac(); if(!c) return; burst(c, c.currentTime, .03, 'highpass', rnd(1800,3500), 0, rnd(.1,.4), .03); }
+  function burnSound(sec){ bed(sec,'bandpass',900,.14); for (let i=0;i<sec*9;i++) setTimeout(() => Math.random()<.75 && crackle(), i*110 + rnd(0,60)); }
+  function whoosh(){ bed(1.4,'bandpass',260,.38,2800); }
+  function thud(){
+    const c = ac(); if(!c) return; const t = c.currentTime;
+    const o = c.createOscillator(); o.frequency.setValueAtTime(140,t); o.frequency.exponentialRampToValueAtTime(50,t+.15);
+    const g = c.createGain(); g.gain.setValueAtTime(.35,t); g.gain.exponentialRampToValueAtTime(.001,t+.18);
+    o.connect(g).connect(out); o.start(t); o.stop(t+.2);
+  }
+  function chime(){
+    const c = ac(); if(!c) return;
+    [523.25,659.25,783.99,1046.5].forEach((fq,i) => {
+      const t = c.currentTime + i*.1;
+      const o = c.createOscillator(); o.type='sine'; o.frequency.value = fq;
+      const g = c.createGain(); g.gain.setValueAtTime(.001,t); g.gain.linearRampToValueAtTime(.13,t+.02); g.gain.exponentialRampToValueAtTime(.001,t+1);
+      o.connect(g).connect(out); o.start(t); o.stop(t+1.05);
+    });
+  }
+  const soundBtn = $('soundBtn');
+  function renderSound(){ soundBtn.classList.toggle('on', soundOn); $('soundTxt').textContent = soundOn ? '소리 켜짐' : '소리 꺼짐'; }
+  soundBtn.onclick = () => { soundOn = !soundOn; store.set('pp_sound', soundOn); renderSound(); if (soundOn) popSound(); };
+  renderSound();
+
+  /* ---------- 탭 ---------- */
+  const tabBtns = document.querySelectorAll('.tabs button');
+  function show(id){
+    document.querySelectorAll('section').forEach(s => s.classList.toggle('on', s.id === id));
+    tabBtns.forEach(b => b.classList.toggle('on', b.dataset.tab === id));
+    if (id === 'endSec'){ printReceipt(); setTimeout(() => buddy.line('end', {jump:true}), 1300); }
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  tabBtns.forEach(b => b.onclick = () => show(b.dataset.tab));
+  document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => show(b.dataset.go));
+
+  /* ---------- 1. 뽁뽁이 ---------- */
+  const sheet = $('sheet'), rowsEl = $('rows'), done = $('done');
+  let left = 0, size = 0, pressing = false, sessionPops = 0;
+  const cols = () => innerWidth < 560 ? 7 : (innerWidth < 800 ? 10 : 13);
+  const nrows = () => innerWidth < 560 ? 9 : 8;
+  function renderCounts(){
+    $('today').textContent = daily.pop; $('total').textContent = total.toLocaleString(); $('sheets').textContent = sheets + 1;
+    const p = size ? Math.round((size-left)/size*100) : 0;
+    $('rulerFill').style.width = p + '%'; $('pct').textContent = p + '%';
+  }
+  function build(){
+    rowsEl.innerHTML = ''; done.classList.remove('on');
+    const c = cols(), r = nrows(); sheet.style.setProperty('--cols', c);
+    let n = 0;
+    for (let y=0;y<r;y++){
+      const row = document.createElement('div'); row.className = 'brow' + (y%2 ? ' odd' : '');
+      for (let x=0; x<(y%2 ? c-1 : c); x++){
+        const b = document.createElement('div'); b.className = 'b'; b.style.setProperty('--r', rnd(-35,35).toFixed(0)+'deg');
+        row.appendChild(b); n++;
+      }
+      rowsEl.appendChild(row);
+    }
+    left = size = n; renderCounts();
+    sheet.classList.remove('slide'); void sheet.offsetWidth; sheet.classList.add('slide');
+  }
+  function effects(b){
+    const sr = sheet.getBoundingClientRect(), br = b.getBoundingClientRect();
+    const cx = br.left - sr.left + br.width/2, cy = br.top - sr.top + br.height/2;
+    const p = document.createElement('div'); p.className = 'puff';
+    p.style.width = p.style.height = br.width+'px'; p.style.left = cx - br.width/2 + 'px'; p.style.top = cy - br.height/2 + 'px';
+    sheet.appendChild(p);
+    anim(p, [{transform:'scale(.7)', opacity:.9},{transform:'scale(1.7)', opacity:0}], {duration:300, easing:'ease-out'}).then(() => p.remove());
+    if (Math.random() < .09){
+      const t = document.createElement('div'); t.className = 'bbk'; t.textContent = pick(['뽁!','뽁','톡!','빡!']);
+      t.style.left = cx - 10 + 'px'; t.style.top = cy - 30 + 'px'; sheet.appendChild(t);
+      anim(t, [{transform:`translateY(4px) rotate(${rnd(-14,14)}deg) scale(.7)`, opacity:0},{transform:'translateY(-8px) scale(1.05)', opacity:1, offset:.3},{transform:'translateY(-26px)', opacity:0}], {duration:650, easing:'ease-out'}).then(() => t.remove());
+    }
+  }
+  // 터진 자국: 알마다 다르게 구겨진 테두리와 하얀 주름
+  function crumple(b){
+    const pts = [], n = 18;
+    for (let i=0;i<n;i++){ const a = i/n*Math.PI*2, r = rnd(45.5,50); pts.push(`${(50+Math.cos(a)*r).toFixed(1)}% ${(50+Math.sin(a)*r).toFixed(1)}%`); }
+    b.style.setProperty('--cp', `polygon(${pts.join(',')})`);
+    let soft = '', fine = '';
+    const k = Math.random() < .5 ? 2 : 3;
+    const a0 = rnd(0, Math.PI*2);
+    for (let i=0;i<k;i++){
+      const a = a0 + i*(Math.PI*2/k) + rnd(-.4,.4), r1 = rnd(30,42), r2 = rnd(30,42);
+      const x1 = 50+Math.cos(a)*r1, y1 = 50+Math.sin(a)*r1, dl = rnd(1.5,2.5), x3 = 50+Math.cos(a+dl)*r2, y3 = 50+Math.sin(a+dl)*r2; // 가운데를 피해 가장자리 쪽으로 휜 주름
+      const cx = (x1+x3)/2 + rnd(-8,8), cy = (y1+y3)/2 + rnd(-8,8);
+      const d = `M${x1.toFixed(1)} ${y1.toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${x3.toFixed(1)} ${y3.toFixed(1)}`;
+      soft += `<path d="${d}" stroke="rgba(255,255,255,.55)" stroke-width="${rnd(7,11).toFixed(1)}"/>`;   // 넓고 흐린 접힘
+      fine += `<path d="${d}" stroke="rgba(255,255,255,.85)" stroke-width="1.4"/><path d="${d}" stroke="rgba(var(--bs),.22)" stroke-width="1" transform="translate(.8 1.4)"/>`;
+    }
+    if (Math.random() < .2){ const x = rnd(34,56), y = rnd(34,56); fine += `<path d="M${x} ${y} q${rnd(4,7).toFixed(1)} ${rnd(-3,3).toFixed(1)} ${rnd(9,14).toFixed(1)} ${rnd(-2,2).toFixed(1)}" stroke="rgba(70,45,20,.4)" stroke-width="1.4"/>`; } // 가끔 찢어진 틈
+    b.innerHTML = `<svg class="crease" viewBox="0 0 100 100" fill="none" stroke-linecap="round"><g style="filter:blur(2.5px)">${soft}</g>${fine}</svg>`;
+  }
+  function popEl(b){
+    if (!b || !b.classList || !b.classList.contains('b') || b.classList.contains('p')) return;
+    if (b === held){ clearTimeout(holdT); held = null; }
+    crumple(b);
+    b.classList.remove('press'); b.classList.add('p','pop'); setTimeout(() => b.classList.remove('pop'), 220);
+    popSound(); effects(b);
+    if (navigator.vibrate) { try{ navigator.vibrate(12); }catch(e){} }
+    left--; total++; daily.pop++; sessionPops++;
+    if (sessionPops % 45 === 0) buddy.line('pop');
+    if (left === 0){ sheets++; store.set('pp_sheets', sheets); setTimeout(() => { done.classList.add('on'); chime(); buddy.line('done', {jump:true}); }, 300); }
+    renderCounts(); store.set('pp_total', total); saveDaily();
+  }
+  // 꾹 누르면 알이 점점 찌그러지다가 알마다 다른 순간(0.16~0.32초)에 '뽁'.
+  // 그 전에 손을 떼면 떼는 순간 터지고, 누른 채로 문지르면 지나가는 알이 바로바로 터짐.
+  let held = null, holdT = null;
+  sheet.addEventListener('pointerdown', e => {
+    pressing = true; ac();
+    const b = e.target;
+    if (b.classList && b.classList.contains('b') && !b.classList.contains('p')){
+      const ms = Math.round(rnd(160, 320));
+      held = b; b.style.setProperty('--hold', ms + 'ms'); b.classList.add('press'); squeak();
+      holdT = setTimeout(() => { if (held === b) popEl(b); }, ms);
+    }
+  });
+  sheet.addEventListener('pointermove', e => {
+    if (!pressing) return;
+    const t = document.elementFromPoint(e.clientX, e.clientY);
+    if (t && t !== held) popEl(t);
+  });
+  function release(){ pressing = false; if (held) popEl(held); }
+  addEventListener('pointerup', release);
+  addEventListener('pointercancel', release);
+  $('newSheet').onclick = build; $('resetSheet').onclick = build;
+  let lastCols = cols(); addEventListener('resize', () => { if (cols() !== lastCols){ lastCols = cols(); build(); } });
+  build();
+
+  /* ---------- 2. 걱정 파쇄기 ---------- */
+  const worry = $('worry'), throwBtn = $('throwBtn'), stage = $('stage'), msg = $('msg');
+  const labels = {shred:'파쇄하기', burn:'태우기', plane:'날려 보내기'};
+  const doneMsgs = {
+    shred:['잘게 갈려서 사라졌어요','이제 아무도 못 읽어요','종이 가루가 됐어요'],
+    burn:['재가 돼서 흩어졌어요','활활 타서 없어졌어요','연기처럼 날아갔어요'],
+    plane:['저 멀리 날아갔어요','이제 안 보여요','멀리멀리 떠나보냈어요']
+  };
+  let mode = 'shred', busy = false;
+  const worryTotal = () => daily.shred + daily.burn + daily.plane;
+  $('worryCount').textContent = worryTotal();
+
+  // 안내 문구: 무대 위쪽 종이 라벨로만 보여주고, 결과 문구는 잠깐 뒤 사라짐
+  let msgTimer = null;
+  function say(text, ms){
+    clearTimeout(msgTimer); msg.textContent = text; msg.classList.remove('hide');
+    if (ms) msgTimer = setTimeout(() => msg.classList.add('hide'), ms);
+  }
+  function hush(){ clearTimeout(msgTimer); msg.classList.add('hide'); }
+
+  function setMode(m){
+    hush();
+    mode = m; throwBtn.textContent = labels[m];
+    document.querySelectorAll('.mode').forEach(x => x.classList.toggle('on', x.dataset.mode === m));
+    clearStage(); stage.dataset.mode = m; idle();
+  }
+  document.querySelectorAll('.mode').forEach(b => b.onclick = () => { if (!busy) setMode(b.dataset.mode); });
+  function sync(){ $('len').textContent = worry.value.length; throwBtn.disabled = busy || !worry.value.trim(); }
+  worry.addEventListener('input', sync);
+  worry.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ e.preventDefault(); throwBtn.click(); } });
+
+  function el(cls, parent, html){ const d = document.createElement('div'); d.className = cls; if (html) d.innerHTML = html; (parent||stage).appendChild(d); return d; }
+  function clearStage(){ stage.querySelectorAll(':scope > :not(.ground):not(.msg)').forEach(n => n.remove()); }
+  function idle(){ if (mode === 'shred'){ machine(); el('basket'); } else if (mode === 'burn'){ el('bowl'); } else clouds(); }
+  function machine(){ return el('machine', null, '<div class="slot"></div><span class="lbl">걱정 파쇄기</span><div class="vent"><i></i><i></i><i></i></div><span class="led"></span>'); }
+  function clouds(){
+    const svg = '<svg viewBox="0 0 120 50"><path d="M22 46H98A15 15 0 0 0 98 16A22 22 0 0 0 58 10A16 16 0 0 0 30 20A14 14 0 0 0 22 46Z" fill="#fff" stroke="#26211c" stroke-width="2.5" stroke-linejoin="round"/></svg>';
+    [[4,84,100],[66,110,120],[20,232,80],[68,272,96]].forEach(([x,y,w],i) => {
+      const c = el('cloud', null, svg); c.style.left = x+'%'; c.style.top = y+'px'; c.style.width = w+'px';
+      c.animate([{transform:'translateX(0)'},{transform:`translateX(${i%2?-26:26}px)`}], {duration:6000+i*900, direction:'alternate', iterations:Infinity, easing:'ease-in-out'});
+    });
+  }
+  function paper(text, parent, top){ const p = el('paper', parent); p.textContent = text; p.style.top = top+'px'; return p; }
+
+  async function doShred(text){
+    clearStage();
+    const feed = el('feed'); const m = machine(); const chute = el('chute'); el('basket');
+    const p = paper(text, feed, 30);
+    await anim(p, [{transform:'translateY(-170px) rotate(-5deg)'},{transform:'translateY(0) rotate(0)'}], {duration:550, easing:'cubic-bezier(.2,.9,.3,1.2)'});
+    await wait(300);
+    const dur = 1500; m.classList.add('run'); motor(dur/1000 + .3, 52, .45);
+    anim(p, [{transform:'translateY(0)'},{transform:'translateY(160px)'}], {duration:dur, easing:'linear'});
+    const sr = stage.getBoundingClientRect(), pr = p.getBoundingClientRect();
+    const x0 = pr.left - sr.left - 2, w = pr.width, N = 11, sw = w/N, strips = [];
+    for (let i=0;i<N;i++){
+      const s = el('strip', chute); s.style.left = (x0 + i*sw)+'px'; s.style.width = (sw-1)+'px';
+      const inner = el('inner', s); inner.textContent = text; inner.style.left = (-i*sw)+'px';
+      strips.push(s);
+      anim(s, [{clipPath:'inset(0 0 100% 0)'},{clipPath:'inset(0 0 0 0)'}], {duration:dur, easing:'linear'});
+    }
+    await wait(dur + 60); p.remove(); m.classList.remove('run');
+    await Promise.all(strips.map((s,i) => anim(s, [
+      {transform:'translateY(0) rotate(0)'},
+      {transform:`translate(${(i-N/2)*rnd(2,4)}px,${rnd(30,45)}px) rotate(${rnd(-20,20)}deg)`, offset:.55},
+      {transform:`translate(${(i-N/2)*rnd(3,6)}px,${rnd(60,80)}px) rotate(${rnd(-60,60)}deg)`, opacity:0}
+    ], {duration:rnd(900,1300), delay:i*35, easing:'ease-in'})));
+  }
+
+  async function doBurn(text){
+    clearStage();
+    const warm = el('warm'); el('bowl');
+    const p = paper(text, null, 40); p.style.zIndex = 5;
+    await anim(p, [{transform:'translateY(-200px) rotate(8deg)'},{transform:'translateY(0) rotate(-3deg)'}], {duration:550, easing:'cubic-bezier(.2,.9,.3,1.2)'});
+    await wait(250);
+    await anim(p, [{transform:'translateY(0) rotate(-3deg) scale(1)'},{transform:'translateY(170px) rotate(12deg) scale(.72)'}], {duration:480, easing:'ease-in'});
+    thud();
+    const sec = 3.2; burnSound(sec); bed(sec,'lowpass',260,.22);
+    warm.animate([{opacity:0},{opacity:1, offset:.15},{opacity:.75, offset:.3},{opacity:1, offset:.45},{opacity:.8, offset:.6},{opacity:1, offset:.75},{opacity:0}], {duration:sec*1000, fill:'forwards'});
+    anim(p, [
+      {filter:'none', clipPath:'inset(0 0 0 0)', opacity:1},
+      {filter:'sepia(1) brightness(.6)', clipPath:'inset(35% 0 0 0)', offset:.35},
+      {filter:'brightness(.15)', clipPath:'inset(80% 0 0 0)', offset:.65},
+      {filter:'brightness(0)', clipPath:'inset(100% 0 0 0)', opacity:0}
+    ], {duration:sec*700, easing:'linear'});
+    await fire(sec*1000);
+    p.remove();
+  }
+
+  /* 진짜 불처럼: 캔버스 입자를 빛 더하기(lighter) 방식으로 겹쳐 그림 */
+  const fireSprites = (() => {
+    const stops = [[0,[255,250,225]],[.18,[255,214,110]],[.38,[255,150,40]],[.6,[235,80,18]],[.8,[150,30,10]],[1,[40,10,5]]];
+    const col = t => { for (let i=1;i<stops.length;i++){ if (t <= stops[i][0]){ const [a,ca] = stops[i-1], [b,cb] = stops[i], k = (t-a)/(b-a); return ca.map((v,j) => Math.round(v + (cb[j]-v)*k)); } } return stops[stops.length-1][1]; };
+    const list = [];
+    for (let i=0;i<48;i++){
+      const t = i/47, [r,g,b] = col(t), a = (1 - t) * .55 + .05;
+      const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d');
+      const gr = x.createRadialGradient(32,32,0,32,32,32);
+      gr.addColorStop(0, `rgba(${r},${g},${b},${a})`); gr.addColorStop(.45, `rgba(${r},${g},${b},${a*.5})`); gr.addColorStop(1, `rgba(${r},${g},${b},0)`);
+      x.fillStyle = gr; x.fillRect(0,0,64,64); list.push(c);
+    }
+    const sm = document.createElement('canvas'); sm.width = sm.height = 64; const sx = sm.getContext('2d');
+    const sg = sx.createRadialGradient(32,32,0,32,32,32); sg.addColorStop(0,'rgba(120,112,125,.22)'); sg.addColorStop(1,'rgba(120,112,125,0)');
+    sx.fillStyle = sg; sx.fillRect(0,0,64,64);
+    return {list, smoke:sm};
+  })();
+  const gauss = () => (Math.random()+Math.random()+Math.random()-1.5)/1.5;
+  function fire(ms){
+    return new Promise(res => {
+      const cv = document.createElement('canvas'); cv.className = 'firecv'; stage.appendChild(cv);
+      const W = stage.clientWidth, H = stage.clientHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
+      cv.width = W*dpr; cv.height = H*dpr; const g = cv.getContext('2d'); g.scale(dpr,dpr);
+      const cx = W/2, baseY = H - 100, flames = [], sparks = [], smoke = [];
+      const t0 = performance.now(); let prev = t0;
+      function frame(now){
+        const e = now - t0, dt = Math.min(2.5, (now - prev)/16.7); prev = now;
+        const inten = e < 450 ? e/450 : (e > ms-900 ? Math.max(0, (ms-e)/900) : 1);
+        const flick = .85 + Math.sin(e*.023)*.08 + Math.sin(e*.061)*.07;
+        if (e < ms){
+          for (let i=0, n = Math.round(14*inten*dt); i<n; i++) flames.push({x:cx + gauss()*62, y:baseY + rnd(-4,8), vx:rnd(-.35,.35), vy:-rnd(1.4,2.9), life:0, max:rnd(34,62), s:rnd(26,46)*flick});
+          if (Math.random() < .35*inten*dt) sparks.push({x:cx + gauss()*50, y:baseY - rnd(10,40), vx:rnd(-.8,.8), vy:-rnd(1.5,3.5), life:0, max:rnd(50,90)});
+          if (Math.random() < .5*inten*dt) smoke.push({x:cx + gauss()*40, y:baseY - rnd(70,110), vx:rnd(-.3,.3), vy:-rnd(.6,1.1), life:0, max:rnd(80,130), s:rnd(30,50)});
+        }
+        g.clearRect(0,0,W,H);
+        g.globalCompositeOperation = 'source-over';
+        for (let i=smoke.length-1;i>=0;i--){
+          const p = smoke[i]; p.life += dt; p.x += p.vx*dt + Math.sin((p.y+e*.05)*.03)*.3; p.y += p.vy*dt; p.s += .5*dt;
+          if (p.life > p.max){ smoke.splice(i,1); continue; }
+          g.globalAlpha = Math.sin(Math.PI * p.life/p.max); g.drawImage(fireSprites.smoke, p.x-p.s, p.y-p.s, p.s*2, p.s*2);
+        }
+        g.globalAlpha = 1; g.globalCompositeOperation = 'lighter';
+        for (let i=flames.length-1;i>=0;i--){
+          const p = flames[i]; p.life += dt;
+          if (p.life > p.max){ flames.splice(i,1); continue; }
+          p.vy -= .035*dt; p.vx += ((cx - p.x)*.0028 + Math.sin(e*.012 + p.y*.06)*.09)*dt;
+          p.x += p.vx*dt; p.y += p.vy*dt; p.s *= Math.pow(.982, dt);
+          const t = p.life/p.max, s = p.s*(1 - t*.35);
+          g.drawImage(fireSprites.list[Math.min(47, Math.floor(t*47))], p.x - s/2, p.y - s/2, s, s);
+        }
+        for (let i=sparks.length-1;i>=0;i--){
+          const p = sparks[i]; p.life += dt;
+          if (p.life > p.max){ sparks.splice(i,1); continue; }
+          p.vx += Math.sin(p.life*.3)*.06*dt; p.vy += .012*dt; p.x += p.vx*dt; p.y += p.vy*dt;
+          const a = (1 - p.life/p.max) * (.6 + Math.random()*.4);
+          g.fillStyle = `rgba(255,${180 + Math.floor(Math.random()*60)},90,${a})`;
+          g.beginPath(); g.arc(p.x, p.y, 1.4, 0, Math.PI*2); g.fill();
+        }
+        if (e > ms && !flames.length && !sparks.length && !smoke.length){ cv.remove(); res(); return; }
+        if (e > ms + 4000){ cv.remove(); res(); return; } // 안전장치
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  async function doPlane(text){
+    clearStage(); clouds();
+    const p = paper(text, null, 120); p.style.zIndex = 4;
+    await anim(p, [{transform:'scale(.6)', opacity:0},{transform:'scale(1)', opacity:1}], {duration:400, easing:'cubic-bezier(.2,.9,.3,1.3)'});
+    await wait(350);
+    await anim(p, [{transform:'scale(1) rotateY(0)'},{transform:'scale(.7) rotateY(70deg)', offset:.5},{transform:'scale(.3) rotateY(90deg)', opacity:0}], {duration:550, easing:'ease-in'});
+    p.remove();
+    const pl = el('plane', null, `<svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 40 L116 6 L64 46 Z" fill="#fff" stroke="#26211c" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M64 46 L116 6 L74 72 Z" fill="#f2ede2" stroke="#26211c" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M64 46 L58 64 L74 72" fill="#e3dccb" stroke="#26211c" stroke-width="2.6" stroke-linejoin="round"/></svg>`);
+    await anim(pl, [{transform:'scale(.4) rotate(-10deg)', opacity:0},{transform:'scale(1) rotate(-10deg)', opacity:1}], {duration:300, easing:'cubic-bezier(.2,.9,.3,1.4)'});
+    whoosh();
+    const fly = pl.animate([
+      {transform:'translate(0,0) rotate(-10deg) scale(1)'},
+      {transform:'translate(-90px,40px) rotate(8deg) scale(.95)', offset:.22},
+      {transform:'translate(60px,-30px) rotate(-22deg) scale(.8)', offset:.5},
+      {transform:'translate(380px,-260px) rotate(-30deg) scale(.4)', opacity:1, offset:.88},
+      {transform:'translate(480px,-330px) rotate(-30deg) scale(.3)', opacity:0}
+    ], {duration:1700, fill:'forwards', easing:'ease-in'});
+    const t0 = performance.now(), sr = stage.getBoundingClientRect();
+    let last = null;
+    const iv = setInterval(() => {
+      const r = pl.getBoundingClientRect(), x = r.left - sr.left + r.width*.12, y = r.top - sr.top + r.height*.5;
+      if (last){
+        const d = el('dash'); d.style.left = x+'px'; d.style.top = y+'px';
+        d.style.transform = `rotate(${Math.atan2(y-last[1], x-last[0])}rad)`;
+        anim(d, [{opacity:.8},{opacity:0}], {duration:900}).then(() => d.remove());
+      }
+      last = [x,y];
+      if (performance.now() - t0 > 1450) clearInterval(iv);
+    }, 70);
+    await fly.finished; clearInterval(iv); pl.remove();
+  }
+
+  throwBtn.onclick = async () => {
+    const text = worry.value.trim(); if (!text || busy) return;
+    busy = true; worry.value = ''; sync();
+    document.querySelectorAll('.mode').forEach(b => b.disabled = true);
+    hush(); stage.dataset.mode = mode; ac();
+    const used = mode;
+    try{
+      if (used === 'shred') await doShred(text);
+      else if (used === 'burn') await doBurn(text);
+      else await doPlane(text);
+    }catch(e){}
+    clearStage(); idle();
+    daily[used]++; saveDaily(); $('worryCount').textContent = worryTotal();
+    say(pick(doneMsgs[used]), 2400);
+    buddy.line(used, {jump:true});
+    busy = false; document.querySelectorAll('.mode').forEach(b => b.disabled = false); sync();
+  };
+  idle();
+
+  /* ---------- 3. 영수증 ---------- */
+  const notes = [
+    '오늘 하루 버틴 것만으로도 충분히 잘했어요.',
+    '걱정은 방금 버렸으니까, 이제 물 한 잔 마셔요.',
+    '잘 안 풀린 날도 그냥 하루예요. 내일 일은 내일의 내가 해요.',
+    '지금 어깨에 힘 들어가 있죠? 한번 툭 내려놔 봐요.',
+    '완벽하지 않아도 계속하고 있잖아요.',
+    '오늘은 여기까지. 남은 건 쉬는 것뿐이에요.',
+    '창문 열고 바깥 공기 한번 마셔봐요.',
+    '천천히 가도 앞으로 가고 있어요.'
+  ];
+  let ni = Math.floor(Math.random()*notes.length);
+  function mood(){
+    const w = worryTotal(), p = daily.pop;
+    if (!w && !p) return '아직 비우는 중';
+    if (p >= 300 || w >= 5) return '속이 뻥 뚫림';
+    if (p >= 100 || w >= 2) return '꽤 가벼워짐';
+    return '조금 가벼워짐';
+  }
+  function bars(){
+    let x = 0, s = '';
+    while (x < 200){ const w = pick([1,1,2,2,3,4]); if (Math.random() > .35) s += `<rect x="${x}" y="0" width="${w}" height="38" fill="#2d2924"/>`; x += w + pick([1,2,2,3]); }
+    return `<svg class="bars" viewBox="0 0 200 38" preserveAspectRatio="none">${s}</svg>`;
+  }
+  function receiptHTML(){
+    const d = new Date();
+    const stamp = `${d.getFullYear()}.${pad(d.getMonth()+1)}.${pad(d.getDate())} (${DAYS[d.getDay()]}) ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    const li = (a,b) => `<div class="li"><span>${a}</span><b>${b}</b></div>`;
+    return `
+      <div class="c shop">뽁뽁 &amp; 파쇄</div>
+      <div class="c">마음 정리 영수증</div>
+      <div class="c" style="color:#8d8275">${stamp}</div>
+      <hr>
+      ${li('품목','수량')}
+      <hr>
+      ${li('뽁뽁이 터뜨림', daily.pop.toLocaleString())}
+      ${li('걱정 파쇄', daily.shred)}
+      ${li('걱정 태움', daily.burn)}
+      ${li('걱정 날림', daily.plane)}
+      <hr>
+      <div class="li sum"><span>합계</span><span>${mood()}</span></div>
+      <hr>
+      ${li('연속 방문', visit.streak + '일째')}
+      ${li('오늘의 뽁뽁이', theme[0])}
+      <hr>
+      <div class="note">${notes[ni]}</div>
+      <hr>
+      ${bars()}
+      <div class="tiny">* 환불 불가 · 버린 걱정은 다시 가져가지 마세요 *</div>`;
+  }
+  const receipt = $('receipt');
+  function printReceipt(){
+    receipt.innerHTML = receiptHTML();
+    motor(1.2, 90, .18);
+    receipt.animate([{transform:'translateY(-100%)'},{transform:'translateY(0)'}], {duration:1300, easing:'steps(16, end)', fill:'both'});
+  }
+  /* ---------- 영수증 이미지 (인스타 스토리 비율 1080×1920) ---------- */
+  const modal = $('modal'), shot = $('shot'), mnote = $('mnote');
+  let imgBlob = null, imgUrl = null;
+  const fname = () => `뽁뽁파쇄_영수증_${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}.png`;
+  function wrapText(g, text, maxW){
+    const out = []; let line = '';
+    for (const ch of text){
+      const t = line + ch;
+      if (g.measureText(t).width > maxW && line){ const sp = line.lastIndexOf(' '); if (sp > 0 && ch !== ' '){ out.push(line.slice(0,sp)); line = line.slice(sp+1) + ch; } else { out.push(line); line = ch === ' ' ? '' : ch; } }
+      else line = t;
+    }
+    if (line) out.push(line); return out;
+  }
+  async function makeImage(){
+    try{
+      await Promise.all(['72px "Bagel Fat One"','60px "Nanum Pen Script"','34px "Nanum Gothic Coding"','bold 34px "Nanum Gothic Coding"']
+        .map(f => document.fonts.load(f, '뽁파쇄영수증가나다123')));
+    }catch(e){}
+    const W = 1080, H = 1920, c = document.createElement('canvas'); c.width = W; c.height = H;
+    const g = c.getContext('2d');
+    const INK = '#26211c', SOFT = '#6f655a', GRAY = '#8d8275';
+    const F = {disp:'"Bagel Fat One", sans-serif', hand:'"Nanum Pen Script", cursive', mono:'"Nanum Gothic Coding", monospace'};
+    // 배경 책상
+    g.fillStyle = '#ece2d0'; g.fillRect(0,0,W,H);
+    g.fillStyle = 'rgba(120,90,50,.05)'; for (let x=0;x<W;x+=140) g.fillRect(x,0,3,H);
+    // 제목
+    g.textAlign = 'center'; g.fillStyle = INK; g.font = `92px ${F.disp}`; g.fillText('뽁뽁 & 파쇄', W/2, 220);
+    g.strokeStyle = '#e5533b'; g.lineWidth = 9; g.lineCap = 'round';
+    g.beginPath(); g.moveTo(300,262); g.bezierCurveTo(420,240,520,282,640,256); g.bezierCurveTo(720,240,770,270,790,252); g.stroke();
+    g.fillStyle = SOFT; g.font = `60px ${F.hand}`; g.fillText('오늘 내 마음 영수증', W/2, 350);
+
+    // 영수증 내용 배치
+    const RX = 170, RW = 740, PAD = 58, IW = RW - PAD*2, LH = 60;
+    g.font = `60px ${F.hand}`; const noteLines = wrapText(g, notes[ni], IW - 20);
+    const d = new Date();
+    const stamp = `${d.getFullYear()}.${pad(d.getMonth()+1)}.${pad(d.getDate())} (${DAYS[d.getDay()]}) ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    const items = [['뽁뽁이 터뜨림', daily.pop.toLocaleString()],['걱정 파쇄', daily.shred],['걱정 태움', daily.burn],['걱정 날림', daily.plane]];
+    const extra = [['연속 방문', visit.streak + '일째'],['오늘의 뽁뽁이', theme[0]]];
+    const RY = 430;
+    const RH = 1110 + noteLines.length*66; // 아래 실제 배치 높이에 맞춘 값
+    // 영수증 종이 (그림자 + 지그재그 아래)
+    const paperPath = () => {
+      g.beginPath(); g.moveTo(RX, RY); g.lineTo(RX+RW, RY); g.lineTo(RX+RW, RY+RH);
+      const zw = 24; for (let x = RX+RW; x > RX; x -= zw){ g.lineTo(x - zw/2, RY+RH+14); g.lineTo(Math.max(RX, x - zw), RY+RH); }
+      g.closePath();
+    };
+    g.save(); g.translate(8,12); g.fillStyle = 'rgba(38,33,28,.13)'; paperPath(); g.fill(); g.restore();
+    g.fillStyle = '#fff'; paperPath(); g.fill();
+    // 테이프
+    g.save(); g.translate(W/2, RY+4); g.rotate(-.04); g.fillStyle = 'rgba(244,210,122,.85)'; g.fillRect(-90,-24,180,48); g.restore();
+
+    let y = RY + PAD + 54;
+    const dash = () => { g.save(); g.strokeStyle = '#9a8f81'; g.lineWidth = 2.5; g.setLineDash([10,8]); g.beginPath(); g.moveTo(RX+PAD, y); g.lineTo(RX+RW-PAD, y); g.stroke(); g.restore(); y += 40; };
+    const row = (a, b, bold) => { g.font = `${bold ? 'bold ' : ''}34px ${F.mono}`; g.fillStyle = INK; g.textAlign = 'left'; g.fillText(a, RX+PAD, y); g.textAlign = 'right'; g.font = `bold 34px ${F.mono}`; g.fillText(String(b), RX+RW-PAD, y); y += LH; };
+    g.textAlign = 'center'; g.fillStyle = INK; g.font = `56px ${F.disp}`; g.fillText('뽁뽁 & 파쇄', W/2, y); y += 70;
+    g.font = `32px ${F.mono}`; g.fillText('마음 정리 영수증', W/2, y); y += 50;
+    g.fillStyle = GRAY; g.font = `28px ${F.mono}`; g.fillText(stamp, W/2, y); y += 50;
+    dash(); row('품목','수량'); y -= 20; dash();
+    items.forEach(([a,b]) => row(a,b)); y -= 20; dash();
+    row('합계', mood(), true); y -= 20; dash();
+    extra.forEach(([a,b]) => row(a,b)); y -= 20; dash();
+    g.textAlign = 'center'; g.fillStyle = INK; g.font = `60px ${F.hand}`;
+    noteLines.forEach(l => { y += 6; g.fillText(l, W/2, y + 20); y += 60; });
+    y += 10; dash();
+    // 바코드
+    let bx = RX + 120; const bw = RW - 240; g.fillStyle = '#2d2924';
+    while (bx < RX + 120 + bw){ const w = pick([2,2,4,4,6,8]); if (Math.random() > .35) g.fillRect(bx, y - 10, w, 90); bx += w + pick([2,4,4,6]); }
+    y += 125;
+    g.fillStyle = GRAY; g.font = `24px ${F.mono}`; g.fillText('* 환불 불가 · 버린 걱정은 다시 가져가지 마세요 *', W/2, y);
+
+    // 아래: 사이트 주소 (배포한 주소가 자동으로 들어감)
+    const host = /claude|localhost|^$/.test(location.hostname) ? '' : (location.host + location.pathname).replace(/index\.html$/,'').replace(/\/$/,'');
+    g.fillStyle = SOFT; g.font = `48px ${F.hand}`;
+    g.fillText(host ? host : '뽁뽁 & 파쇄에서 비우고 왔어요', W/2, Math.min(H - 80, RY + RH + 120));
+
+    return new Promise(r => c.toBlob(r, 'image/png'));
+  }
+  $('makeImg').onclick = async () => {
+    mnote.textContent = '';
+    imgBlob = await makeImage();
+    if (!imgBlob){ mnote.textContent = '이미지를 만들지 못했어요. 다시 눌러 주세요.'; return; }
+    if (imgUrl) URL.revokeObjectURL(imgUrl);
+    imgUrl = URL.createObjectURL(imgBlob); shot.src = imgUrl;
+    const file = new File([imgBlob], fname(), {type:'image/png'});
+    $('shareImg').style.display = (navigator.canShare && navigator.canShare({files:[file]})) ? '' : 'none';
+    modal.classList.add('on'); modal.setAttribute('aria-hidden','false');
+  };
+  $('saveImg').onclick = () => {
+    if (!imgUrl) return;
+    const a = document.createElement('a'); a.href = imgUrl; a.download = fname(); document.body.appendChild(a); a.click(); a.remove();
+    if (window.top !== window) mnote.textContent = '미리보기 화면에서는 저장이 막힐 수 있어요. 배포한 사이트에서는 정상 저장돼요.';
+  };
+  $('shareImg').onclick = async () => {
+    try{ await navigator.share({files:[new File([imgBlob], fname(), {type:'image/png'})], title:'뽁뽁 & 파쇄', text:'오늘 내 마음 영수증'}); }
+    catch(e){ if (e && e.name !== 'AbortError') mnote.textContent = '공유가 안 되는 환경이에요. 저장하기를 눌러 주세요.'; }
+  };
+  const closeModal = () => { modal.classList.remove('on'); modal.setAttribute('aria-hidden','true'); };
+  $('closeModal').onclick = closeModal;
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  $('reprint').onclick = () => { ni = (ni + 1 + Math.floor(Math.random()*(notes.length-1))) % notes.length; printReceipt(); };
+
+  // 숨쉬기 문구를 원 주기(8초)에 맞춤: 앞 4초 커짐=들이쉬기, 뒤 4초 작아짐=내쉬기
+  const core = $('breathTxt'); let bt = null;
+  function cycle(){ clearTimeout(bt); core.textContent = '들이쉬고'; bt = setTimeout(() => core.textContent = '내쉬고', 4000); }
+  core.addEventListener('animationstart', cycle);
+  core.addEventListener('animationiteration', cycle);
+})();
+</script>
+</body>
+</html>
